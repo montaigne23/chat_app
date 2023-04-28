@@ -1,16 +1,56 @@
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { NgModule } from '@angular/core';
+import { ChatService } from './chat.service';
+import { FormsModule } from '@angular/forms';
+import { AppRoutingModule } from './app-routing.module';
+import { SocialAuthServiceConfig, SocialLoginModule,   } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider, FacebookLoginProvider, VKLoginProvider  } from '@abacritt/angularx-social-login';
+import { DataService } from './data.service';
+import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
+import { LoginComponent } from './login/login.component';
+import { ChatComponent } from './chat/chat.component';
+import { SecondLoginComponent } from './second-login/second-login.component';
+import { SignupComponent } from './signup/signup.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent,
+    ChatComponent,
+    SecondLoginComponent,
+    SignupComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule,
+    AppRoutingModule,
+    SocialLoginModule,
+    HttpClientModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '663302841536-pqlvbekggnmb05301rr9g3r0rm0e44pb.apps.googleusercontent.com'
+            )
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider('524954454603212')
+          }
+        ],
+        onError: (err) => {
+          console.error(err);
+        }
+      } as SocialAuthServiceConfig,
+    },
+    DataService, ChatService
+  ],  bootstrap: [AppComponent]
 })
 export class AppModule { }
